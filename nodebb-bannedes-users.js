@@ -10,10 +10,10 @@
 
 const search = '?section=bannedes'
 const link = $(`<li><a href="/users${search}">מורחק</a></li>`)
-const olLink = $(`<li itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+const olLink = `<li itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
 <meta itemprop="position" content="1"><a href="/users" itemprop="item"><span itemprop="name">משתמשים</span></a></li>
 <li component="breadcrumb/current" itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="active">
-<meta itemprop="position" content="2"><span itemprop="name">מורחק</span></li>`)
+<meta itemprop="position" content="2"><span itemprop="name">מורחק</span></li>`
 
 $(window).on('action:ajaxify.end', () => {
     if (location.pathname == '/users') {
@@ -24,13 +24,13 @@ $(window).on('action:ajaxify.end', () => {
             $('ol').append(olLink)
             $('div[component="pagination"]').remove()
             $('#search-user').prop('disabled', true)
+            $('#users-container').empty()
             app.alert({
                 alert_id: 'loading_bannedes',
                 title: 'טוען נתונים <i class="fa fa-spinner fa-pulse"></i>',
                 message: 'אנא המתן...'
             })
             setTimeout(() => { document.title = document.title.replace('אחרונים', 'מורחקים') })
-            $('#users-container').empty()
             fetch('/api/users').then(res => res.json()).then(data =>
                 Promise.all(
                     Array.from({ length: data.pagination.pageCount }, (x, i) => i + 1).map(page =>
@@ -50,13 +50,13 @@ $(window).on('action:ajaxify.end', () => {
             ).then(pages => [].concat(...pages)).then(users => {
                 users.map(user => {
                     if (user.banned) {
+                        var username = utils.decodeHTMLEntities(user.username)
                         $('#users-container').append(
                             $(`<li class="users-box registered-user" data-uid="${user.uid}"></li>`).append(
                                 $(`<a href="/user/${user.userslug}"></a>`).append(
                                     $(user.picture ? `<img component="avatar/picture" src="${user.picture}">` : `<span component="avatar/icon" style="background-color: ${user.bgColor};">${user.text}</span>`)
-                                    .addClass('avatar avatar-lg avatar-rounded')
-                                    .attr({ 'alt': utils.decodeHTMLEntities(user.username), 'title': '', 'data-uid': user.uid, 'loading': 'lazy', 'data-original-title': utils.decodeHTMLEntities(user.username) })
-                                ), `<br><div class="user-info"><span><a href="/user/${user.userslug}">${user.username}</a></span></div>`
+                                    .addClass('avatar avatar-lg avatar-rounded').attr({ 'alt': username, 'title': '', 'data-uid': user.uid, 'loading': 'lazy', 'data-original-title': username })
+                                ), `<br><div class="user-info"><span><a href="/user/${user.userslug}">${username}</a></span></div>`
                             )
                         )
                     }
