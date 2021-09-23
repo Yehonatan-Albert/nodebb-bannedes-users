@@ -38,9 +38,12 @@ $(window).on('action:ajaxify.end', () => {
             }
             else {
                 $('#users-container').empty()
+                $(window).on('action:alert.new', (ev, data) => {
+                    if (data.params.alert_id == 'alert_button_loading_bannedes') $('#alert_button_loading_bannedes').removeClass('alert-info').addClass('text-primary').children('.close').remove()
+                })
                 app.alert({
                     alert_id: 'loading_bannedes',
-                    title: 'טוען נתונים <i class="fa fa-spinner fa-pulse"></i>',
+                    title: 'טוען נתונים <i style="margin-right: 5px;" class="fa fa-spinner fa-pulse"></i>',
                     message: 'אנא המתן...'
                 })
                 fetch('/api/users').then(res => res.json()).then(data =>
