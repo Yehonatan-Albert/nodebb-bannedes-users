@@ -34,6 +34,7 @@ $(window).on('action:ajaxify.end', () => {
             setTimeout(() => { document.title = document.title.replace('אחרונים', 'מורחקים') })
             if (sessionStorage.getItem('bannedesUsers')) {
                 $('#users-container').html(sessionStorage.getItem('bannedesUsers'))
+                $('.avatar.avatar-lg.avatar-rounded').tooltip('fixTitle')
                 addRefreshBtn()
             }
             else {
@@ -70,7 +71,7 @@ $(window).on('action:ajaxify.end', () => {
                                 $(`<li class="users-box registered-user" data-uid="${user.uid}"></li>`).append(
                                     $(`<a href="/user/${user.userslug}"></a>`).append(
                                         $(user.picture ? `<img component="avatar/picture" src="${user.picture}">` : `<span component="avatar/icon" style="background-color: ${user.bgColor};">${user.text}</span>`)
-                                        .addClass('avatar avatar-lg avatar-rounded').attr({ 'alt': username, 'title': '', 'data-uid': user.uid, 'loading': 'lazy', 'data-original-title': username })
+                                        .addClass('avatar avatar-lg avatar-rounded').attr({ 'alt': username, 'title': '', 'data-uid': user.uid, 'loading': 'lazy', 'data-original-title': username }).tooltip('fixTitle')
                                     ), `<br><div class="user-info"><span><a href="/user/${user.userslug}">${username}</a></span></div>`
                                 )
                             )
