@@ -10,10 +10,6 @@
 
 const search = '?section=bannedes'
 const link = $(`<li><a href="/users${search}">מורחק</a></li>`)
-const olLink = `<li itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
-<meta itemprop="position" content="1"><a href="/users" itemprop="item"><span itemprop="name">משתמשים</span></a></li>
-<li component="breadcrumb/current" itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="active">
-<meta itemprop="position" content="2"><span itemprop="name">מורחק</span></li>`
 
 function addRefreshBtn() {
     $('div.users>div>div.text-right').append($(`<button class="btn btn-default">טען מחדש</button>`).click(() => {
@@ -27,8 +23,9 @@ $(window).on('action:ajaxify.end', () => {
         $('.nav.nav-pills').append(link)
         if (location.search == search) {
             link.addClass('active')
-            $('meta[content="1"]').parent().remove()
-            $('ol').append(olLink)
+            $('ol>.active').removeClass('active').removeAttr('component').children('span').wrap(`<a href="/users" itemprop="item"></a>`)
+            $('ol').append(`<li component="breadcrumb/current" itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="active">
+<meta itemprop="position" content="2"><span itemprop="name">מורחק</span></li>`)
             $('div[component="pagination"]').remove()
             $('#search-user').prop('disabled', true)
             setTimeout(() => { document.title = document.title.replace('אחרונים', 'מורחקים') })
